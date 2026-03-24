@@ -420,6 +420,44 @@
       "artifacts": [
         "NexusVault"
       ]
+    },
+    "/Users/fmf/Downloads/nexusPay/smart-contracts/contracts/SimpleToken.sol": {
+      "lastModificationDate": 1774324391390,
+      "contentHash": "1d65dc6e509c94afc5923aeef4affa5a",
+      "sourceName": "contracts/SimpleToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SimpleToken"
+      ]
     }
   }
 }
