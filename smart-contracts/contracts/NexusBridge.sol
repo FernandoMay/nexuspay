@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-import "@hedera/smart-contracts/contracts/HederaTokenService.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./NexusToken.sol";
@@ -12,7 +11,7 @@ import "./NexusToken.sol";
  * @dev Cross-currency swap and bridge contract for Nexus Pay
  * Handles tokenized currency swaps with yield generation
  */
-contract NexusBridge is HederaTokenService, ReentrancyGuard, Ownable {
+contract NexusBridge is ReentrancyGuard, Ownable {
     
     // Token registry
     mapping(string => address) public currencyTokens; // "MXN" => NexusToken address
