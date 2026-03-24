@@ -1,4 +1,4 @@
-const { AccountId, PrivateKey, ContractCreateFlow, ContractFunctionParameters, Client } = require("@hashgraph/sdk");
+const { AccountId, PrivateKey, ContractCreateFlow, ContractFunctionParameters, Client, AccountBalanceQuery } = require("@hashgraph/sdk");
 const fs = require("fs");
 const path = require("path");
 
@@ -12,7 +12,11 @@ async function main() {
   const client = Client.forTestnet().setOperator(operatorId, operatorKey);
   
   console.log("📝 Using account:", operatorId.toString());
-  console.log("💰 Account balance:", (await client.getBalance()).toString(), "HBAR");
+  
+  // Check account balance
+  const balanceQuery = new AccountBalanceQuery().setAccountId(operatorId);
+  const balance = await balanceQuery.execute(client);
+  console.log("💰 Account balance:", balance.hbars.toString(), "HBAR");
   
   // Read compiled contract artifacts
   const artifactsPath = path.join(__dirname, "../artifacts/contracts/NexusToken.sol/NexusToken.json");
