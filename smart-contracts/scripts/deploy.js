@@ -12,7 +12,7 @@ async function main() {
   console.log("💰 Account balance:", ethers.formatEther(balance), "HBAR");
   
   // Deploy NexusToken contracts for each currency
-  const currencies = ["MXN", "PEN", "USD", "EUR", "BRL"];
+  const currencies = ["MXN"]; // Start with just one token for testing
   const tokenAddresses = {};
   
   console.log("\n🪙 Deploying NexusToken contracts...");
