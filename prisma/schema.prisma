@@ -1,0 +1,184 @@
+// Nexus Pay - Prisma Schema
+// Database models for the global value layer
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/custom.db"
+}
+
+// User model
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  walletAddress String    @unique
+  displayName   String?
+  avatar        String?
+  
+  // Balances (cached for UI)
+  balanceMXN    Float     @default(0)
+  balancePEN    Float     @default(0)
+  balanceUSD    Float     @default(0)
+  balanceEUR    Float     @default(0)
+  balanceBRL    Float     @default(0)
+  
+  // Settings
+  preferredCurrency String @default("USD")
+  notifications  Boolean   @default(true)
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  transfers     Transfer[]
+  tokens        UserToken[]
+  transactions  Transaction[]
+}
+
+// Transfer model for tracking cross-border transfers
+model Transfer {
+  id            String    @id @default(cuid())
+  
+  // Amounts
+  fromAmount    Float
+  fromCurrency  String    // MXN, PEN, USD, etc.
+  toAmount      Float
+  toCurrency    String
+  
+  // Exchange info
+  exchangeRate  Float
+  fee           Float
+  yield         Float     @default(0) // DeFi yield earned
+  
+  // Status
+  status        String    @default("pending") // pending, processing, completed, failed
+  
+  // Hedera transaction IDs
+  htsTransactionId String?
+  hcsTopicId       String?
+  hcsSequenceNumber Int?
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+  
+  // Relations
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([status])
+}
+
+// Transaction model for blockchain transactions
+model Transaction {
+  id            String    @id @default(cuid())
+  
+  // Transaction details
+  type          String    // transfer, swap, yield, fee
+  amount        Float
+  currency      String
+  
+  // Hedera info
+  transactionId String    @unique
+  consensusTimestamp String?
+  nodeId        Int?
+  
+  // Status
+  status        String    @default("submitted")
+  errorMessage  String?
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  
+  // Relations
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([transactionId])
+}
+
+// UserToken model for tokenized balances (HTS)
+model UserToken {
+  id            String    @id @default(cuid())
+  
+  // Token info
+  tokenId       String    // Hedera Token ID (0.0.xxxxx)
+  symbol        String    // MXN.x, PEN.x, USD.x
+  name          String
+  decimals      Int       @default(2)
+  
+  // Balance
+  balance       Float     @default(0)
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, tokenId])
+  @@index([userId])
+}
+
+// ExchangeRate model for caching rates
+model ExchangeRate {
+  id            String    @id @default(cuid())
+  
+  fromCurrency  String
+  toCurrency    String
+  rate          Float
+  
+  // Market data
+  change24h     Float     @default(0)
+  volume24h     Float     @default(0)
+  
+  // Timestamps
+  updatedAt     DateTime  @updatedAt
+  
+  @@unique([fromCurrency, toCurrency])
+}
+
+// HCSMessage model for tracking Hedera Consensus Service messages
+model HCSMessage {
+  id            String    @id @default(cuid())
+  
+  // HCS details
+  topicId       String
+  sequenceNumber Int
+  consensusTimestamp String
+  
+  // Message content
+  messageType   String    // transfer, yield, rate_update
+  content       String    // JSON content
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  
+  @@unique([topicId, sequenceNumber])
+  @@index([topicId])
+}
+
+// YieldPool model for DeFi yield tracking
+model YieldPool {
+  id            String    @id @default(cuid())
+  
+  // Pool info
+  poolId        String    @unique
+  tokenPair     String    // MXN-USD, PEN-USD
+  protocol      String    // Bonzo, SaucerSwap
+  
+  // APY
+  currentAPY    Float
+  tvl           Float
+  
+  // Timestamps
+  updatedAt     DateTime  @updatedAt
+}
