@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:nexus_pay/screens/history_screen.dart';
+import 'package:nexus_pay/screens/wallet_screen.dart';
+import 'package:nexus_pay/screens/ai_assistant_screen.dart';
 
 import '../app/app_theme.dart';
 import '../widgets/balance_card.dart';
@@ -26,9 +29,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         index: _currentIndex,
         children: const [
           _HomeContent(),
-              WalletScreen(),
-              HistoryScreen(),
-              AIAssistantScreen(),
+          WalletScreen(),
+          HistoryScreen(),
+          AIAssistantScreen(),
         ],
       ),
       bottomNavigationBar: NavigationBar(

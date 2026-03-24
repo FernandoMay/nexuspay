@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:nexus_pay/models/wallet.dart' show TransferResult;
+import 'package:web3dart/web3dart.dart';
 
-import '../models/wallet.dart';
-import '../models/transaction.dart';
+// import '../models/wallet.dart';
+// import '../models/transaction.dart';
 
 class ApiService {
   final Dio _dio;

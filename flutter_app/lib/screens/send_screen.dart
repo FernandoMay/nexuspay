@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../app/app_theme.dart';
 import '../models/currency.dart';
 import '../widgets/currency_selector.dart';
-import '../widgets/transfer_summary.dart';
-import '../providers/transfer_provider.dart';
+// import '../widgets/transfer_summary.dart';
+// import '../providers/transfer_provider.dart';
 
 class SendScreen extends ConsumerStatefulWidget {
   const SendScreen({super.key});
